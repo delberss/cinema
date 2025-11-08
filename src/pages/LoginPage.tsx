@@ -2,6 +2,7 @@ import { Box, Button, TextField, Typography, Alert } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCinemaStore } from "../store/useCinemaStore";
+import { validarCPF } from "../utils/validateCPF";
 
 export default function LoginPage() {
   const [cpf, setCpf] = useState("");
@@ -17,6 +18,11 @@ export default function LoginPage() {
 
     if (!cpf || !email) {
       setErro("Preencha CPF e e-mail para continuar.");
+      return;
+    }
+
+    if (!isDevMode && !validarCPF(cpf)) {
+      setErro("CPF inválido. Verifique e tente novamente.");
       return;
     }
 
