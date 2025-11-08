@@ -1,9 +1,17 @@
-import { Box, Button, Card, CardContent, TextField, Typography } from "@mui/material";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import {
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardContent,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { useCinemaStore } from "../store/useCinemaStore";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { useMemo, useState } from "react";
+import {  useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 export default function ConfirmacaoPage() {
   const {
@@ -17,7 +25,6 @@ export default function ConfirmacaoPage() {
   const dataSelecionada = horarioSelecionado?.data || "";
 
   const [erroQuantidade, setErroQuantidade] = useState<string | null>(null);
-
 
   const infoFilmes = [
     {
@@ -38,7 +45,7 @@ export default function ConfirmacaoPage() {
     (f) => f.nome === horarioSelecionado?.filme
   );
 
-    const ingressoExistente = useMemo(() => {
+  const ingressoExistente = useMemo(() => {
     if (!horarioSelecionado) return null;
     return ingressosComprados.find(
       (ing) => ing.filme === horarioSelecionado.filme
@@ -55,8 +62,8 @@ export default function ConfirmacaoPage() {
       </Box>
     );
   }
-  
-    const [quantidadeTemp, setQuantidadeTemp] = useState(
+
+  const [quantidadeTemp, setQuantidadeTemp] = useState(
     horarioSelecionado.quantidade?.toString() || "1"
   );
   return (
@@ -236,6 +243,46 @@ export default function ConfirmacaoPage() {
         </Box>
 
       </Box>
+
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={{ xs: 2.5, sm: 2 }}
+        justifyContent="center"
+        alignItems="center"
+        mt={4}
+        mb={{ xs: 6, sm: 4 }}
+      >
+        <Button
+          variant="outlined"
+          color="info"
+          onClick={() => navigate('/')}
+          sx={{ px: 3, minWidth: 140 }}
+        >
+          Voltar para tela inicial
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={!dataSelecionada}
+          onClick={() => navigate("/pagamento")}
+          sx={{ px: 3, minWidth: 220 }}
+        >
+          Avançar para Pagamento
+        </Button>
+
+        {
+          ingressoExistente &&
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => navigate("/meusingressos")}
+            sx={{ px: 3, minWidth: 180 }}
+          >
+            Ver Meus Ingressos
+          </Button>
+        }
+      </Stack>
     </Box>
   );
 }
