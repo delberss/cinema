@@ -3,6 +3,9 @@ import {
   Typography,
   Card,
   CardContent,
+  Button,
+  Stack,
+  Alert,
 } from "@mui/material";
 import { useCinemaStore } from "../store/useCinemaStore";
 import { useNavigate } from "react-router-dom";
@@ -67,6 +70,18 @@ export default function MeusIngressosPage() {
           ))}
         </Box>
       )}
+
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        justifyContent="center"
+        alignItems="center"
+        mt={4}
+      >
+        <Button variant="contained" color="primary" onClick={() => navigate("/")}>
+          {ingressosComprados.length === 0 ? 'Comprar ingresso' : 'Voltar aos Filmes'}
+        </Button>
+      </Stack>
     </Box>
   );
 }
