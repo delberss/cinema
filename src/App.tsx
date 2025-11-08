@@ -1,9 +1,21 @@
-import { Box, Card, Chip, Grid, Stack, styled, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  styled,
+  Typography,
+  Chip,
+  Stack,
+  Card,
+  Button,
+  ToggleButtonGroup,
+  ToggleButton,
+  Fade,
+} from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import AnimationComponent from "./components/AnimationComponent/AnimationComponent";
 import { useCinemaStore } from "./store/useCinemaStore";
-
 
 interface Filme {
   nome: string;
@@ -13,39 +25,19 @@ interface Filme {
 }
 
 function App() {
+  const navigate = useNavigate();
+  const {
+    horarioSelecionado,
+    setHorarioSelecionado,
+    isLoggedIn,
+    setIsLoggedIn,
+    setUsuario,
+  } = useCinemaStore();
+
   const [infoFilmes, setInfoFilmes] = useState<Filme[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-  const [dataSelecionada, setDataSelecionada] = useState("");
-
-  const {
-    horarioSelecionado,
-  } = useCinemaStore();
-
-  const StyledMovies = styled("img")({
-    height: "350px",
-    objectFit: "cover",
-    borderRadius: "8px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-    width: "100%",
-  });
-
-  const MovieCard = styled(Card)({
-    padding: "16px",
-    borderRadius: "12px",
-    textAlign: "center",
-    maxWidth: "250px",
-    width: "250px",
-    position: "relative",
-  });
-
-  const HorarioChip = styled(Chip)({
-    fontWeight: 500,
-    fontSize: "0.95rem",
-    transition: "all 0.2s ease",
-    "&:hover": { borderColor: "#90caf9", cursor: "pointer" },
-  });
-
+  const [filmeAviso, setFilmeAviso] = useState<string | null>(null);
 
   useEffect(() => {
     const carregarFilmes = async () => {
@@ -77,6 +69,130 @@ function App() {
     });
   }, []);
 
+  const [dataSelecionada, setDataSelecionada] = useState(
+    horarioSelecionado?.data || ""
+  );
+
+  useEffect(() => {
+    if (!dataSelecionada && opcoesDatas.length > 0)
+      setDataSelecionada(opcoesDatas[0]);
+  }, [dataSelecionada, opcoesDatas]);
+
+  // 🔹 Estilos
+  const StyledMovies = styled("img")({
+    height: "350px",
+    objectFit: "cover",
+    borderRadius: "8px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+    width: "100%",
+  });
+
+  const MovieCard = styled(Card)({
+    padding: "16px",
+    borderRadius: "12px",
+    textAlign: "center",
+    maxWidth: "250px",
+    width: "250px",
+    position: "relative",
+  });
+
+  const HorarioChip = styled(Chip)({
+    fontWeight: 500,
+    fontSize: "0.95rem",
+    transition: "all 0.2s ease",
+    "&:hover": { borderColor: "#90caf9", cursor: "pointer" },
+  });
+
+  const AvancarButton = styled(Button)({
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "#1976d2",
+    color: "#fff",
+    fontWeight: 600,
+    borderRadius: "8px",
+    padding: "10px 20px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+    transition: "0.3s",
+    "&:hover": {
+      backgroundColor: "#115293",
+      transform: "translate(-50%, -50%) scale(1.05)",
+    },
+  });
+
+  const AvisoBox = styled(Box)({
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "rgba(0,0,0,0.75)",
+    color: "#fff",
+    fontWeight: 600,
+    borderRadius: "8px",
+    padding: "10px 16px",
+    fontSize: "0.9rem",
+    zIndex: 2,
+  });
+
+  // 🔹 Handlers
+  const handleSelecionarHorario = useCallback(
+    (filme: string, hora: string) => {
+      if (
+        horarioSelecionado?.filme === filme &&
+        horarioSelecionado?.hora === hora
+      ) {
+        setHorarioSelecionado(null);
+      } else {
+        setHorarioSelecionado({
+          filme,
+          hora,
+          data: dataSelecionada || opcoesDatas[0],
+          quantidade: 1,
+        });
+      }
+      setFilmeAviso(null);
+    },
+    [horarioSelecionado, dataSelecionada, opcoesDatas, setHorarioSelecionado]
+  );
+
+  const handleSelecionarData = useCallback(
+    (_: React.MouseEvent<HTMLElement>, novaData: string) => {
+      if (!novaData) return;
+      setDataSelecionada(novaData);
+      if (horarioSelecionado)
+        setHorarioSelecionado({ ...horarioSelecionado, data: novaData });
+    },
+    [horarioSelecionado, setHorarioSelecionado]
+  );
+
+  // Ainda será criado a rota para Confirmação e Login
+  const handleAvancar = useCallback(
+    () => navigate(isLoggedIn ? "/confirmacao" : "/login"),
+    [isLoggedIn, navigate]
+  );
+
+
+  const handleClickCard = (filme: string) => {
+    if (!horarioSelecionado || horarioSelecionado.filme !== filme) {
+      setFilmeAviso(filme);
+      setTimeout(() => setFilmeAviso(null), 2000);
+    }
+  };
+
+  if (carregando)
+    return <Typography align="center" mt={6}>Carregando filmes...</Typography>;
+
+  if (erro)
+    return (
+      <Box textAlign="center" mt={6}>
+        <Typography color="error">{erro}</Typography>
+        <Button variant="contained" onClick={() => window.location.reload()}>
+          Tentar novamente
+        </Button>
+      </Box>
+    );
+
   return (
     <Box textAlign="center" mt={2} mb={6}>
       <Typography
@@ -107,7 +223,9 @@ function App() {
           }}
         />
         <ToggleButtonGroup
+          value={dataSelecionada}
           exclusive
+          onChange={handleSelecionarData}
           aria-label="escolher data"
         >
           {opcoesDatas.map((data) => (
@@ -139,12 +257,27 @@ function App() {
               sx={{ mb: { xs: 2, md: 0 }, mt: { xs: 2, md: 0 } }}
             >
               <AnimationComponent moveDirection={index % 2 === 0 ? "right" : "left"}>
-                <MovieCard elevation={2}>
+                <MovieCard elevation={2} onClick={() => handleClickCard(filme.nome)}>
                   <Typography variant="h6" fontWeight="bold" gutterBottom>
                     {filme.nome}
                   </Typography>
 
-                  <StyledMovies src={filme.image} alt={filme.nome} />
+                  <Box
+                    position="relative"
+                    display="flex"
+                    justifyContent="center"
+                    onClick={() => handleClickCard(filme.nome)}
+                  >
+                    <StyledMovies src={filme.image} alt={filme.nome} />
+
+                    {horarioSelecionado?.filme === filme.nome ? (
+                      <AvancarButton onClick={handleAvancar}>Avançar</AvancarButton>
+                    ) : (
+                      <Fade in={filmeAviso === filme.nome}>
+                        <AvisoBox>Selecione um horário</AvisoBox>
+                      </Fade>
+                    )}
+                  </Box>
 
                   <Stack
                     direction="row"
@@ -164,6 +297,7 @@ function App() {
                           label={hora}
                           color={selecionado ? "primary" : "default"}
                           variant={selecionado ? "filled" : "outlined"}
+                          onClick={() => handleSelecionarHorario(filme.nome, hora)}
                         />
                       );
                     })}
@@ -174,9 +308,8 @@ function App() {
           );
         })}
       </Grid>
-
     </Box>
-  )
+  );
 }
 
-export default App
+export default App;
