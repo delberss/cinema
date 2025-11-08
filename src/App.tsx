@@ -166,12 +166,17 @@ function App() {
     [horarioSelecionado, setHorarioSelecionado]
   );
 
-  // Ainda será criado a rota para Confirmação e Login
   const handleAvancar = useCallback(
     () => navigate(isLoggedIn ? "/confirmacao" : "/login"),
     [isLoggedIn, navigate]
   );
 
+  const handleLogout = useCallback(() => {
+    setIsLoggedIn(false);
+    setUsuario(null);
+    setHorarioSelecionado(null);
+    navigate("/");
+  }, [setIsLoggedIn, setUsuario, setHorarioSelecionado, navigate]);
 
   const handleClickCard = (filme: string) => {
     if (!horarioSelecionado || horarioSelecionado.filme !== filme) {
@@ -242,6 +247,27 @@ function App() {
           ))}
         </ToggleButtonGroup>
       </Box>
+
+      {isLoggedIn && (
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1,
+            position: { xs: "static", md: "absolute" },
+            justifyContent: { xs: "center", md: "flex-end" },
+            mt: { xs: 2, md: 0 },
+            right: { md: 32 },
+            top: { md: 32 },
+          }}
+        >
+          <Button variant="outlined" onClick={() => navigate("/meusingressos")} size="small">
+            Meus ingressos
+          </Button>
+          <Button variant="outlined" color="error" onClick={handleLogout} size="small">
+            Sair
+          </Button>
+        </Box>
+      )}
 
       <Grid container justifyContent="center" rowGap={0.5} mb={4} pb={4}>
         {infoFilmes.map((filme, index) => {
