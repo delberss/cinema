@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, Alert } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCinemaStore } from "../store/useCinemaStore";
@@ -10,6 +10,7 @@ export default function LoginPage() {
   const { setUsuario } = useCinemaStore();
   const navigate = useNavigate();
 
+  const isDevMode = true;
 
   const handleAvancar = () => {
     setErro("");
@@ -34,6 +35,29 @@ export default function LoginPage() {
       <Typography variant="h4" mb={2}>
         Área Restrita para Compra de Ingressos
       </Typography>
+
+      {isDevMode && (
+        <Alert
+          severity="info"
+          sx={{
+            maxWidth: 400,
+            mx: "auto",
+            mb: 3,
+            fontSize: "0.9rem",
+          }}
+        >
+          🔧 <strong>Modo desenvolvedor ativo</strong> — qualquer CPF e e-mail são aceitos.
+        </Alert>
+      )}
+
+      {erro && (
+        <Alert
+          severity="error"
+          sx={{ maxWidth: 400, mx: "auto", mb: 2, fontSize: "0.9rem" }}
+        >
+          {erro}
+        </Alert>
+      )}
 
       <Box
         component="form"
