@@ -1,13 +1,14 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, TextField, Typography } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { useCinemaStore } from "../store/useCinemaStore";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ConfirmacaoPage() {
   const {
     horarioSelecionado,
+    ingressosComprados,
     setHorarioSelecionado,
   } = useCinemaStore();
 
@@ -37,6 +38,12 @@ export default function ConfirmacaoPage() {
     (f) => f.nome === horarioSelecionado?.filme
   );
 
+    const ingressoExistente = useMemo(() => {
+    if (!horarioSelecionado) return null;
+    return ingressosComprados.find(
+      (ing) => ing.filme === horarioSelecionado.filme
+    );
+  }, [horarioSelecionado, ingressosComprados]);
 
   if (!horarioSelecionado) {
     return (
@@ -170,7 +177,7 @@ export default function ConfirmacaoPage() {
                   if (numero > 10) {
                     numero = 10;
                     setErroQuantidade("⚠️ O máximo permitido é 10 ingressos.");
-                    setTimeout(() => setErroQuantidade(null), 3000); 
+                    setTimeout(() => setErroQuantidade(null), 3000);
                   }
 
                   setQuantidadeTemp(numero.toString());
@@ -191,6 +198,40 @@ export default function ConfirmacaoPage() {
               />
 
             </Box>
+          </Box>
+          <Box>
+            {ingressoExistente && (
+              <Box
+                mt={4}
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                gap={2}
+              >
+                <Typography color="warning.main" fontWeight={600}>
+                  ⚠️ Você já possui ingresso para este filme:
+                </Typography>
+
+                <Card sx={{ width: "320px", textAlign: "left" }}>
+                  <CardContent>
+                    <Typography variant="h6">{ingressoExistente.filme}</Typography>
+                    <Typography>Data: {ingressoExistente.data}</Typography>
+                    <Typography>Horário: {ingressoExistente.hora}</Typography>
+                    <Typography>Quantidade: {ingressoExistente.quantidade}</Typography>
+                    <Typography>
+                      Valor total: R$ {ingressoExistente.valor.toFixed(2)}
+                    </Typography>
+                    <Typography color="text.secondary">
+                      Data da compra: {ingressoExistente.dataCompra}
+                    </Typography>
+                  </CardContent>
+                </Card>
+
+                <Typography variant="body2" color="text.secondary">
+                  Se desejar, você pode comprar outro ingresso para este filme.
+                </Typography>
+              </Box>
+            )}
           </Box>
         </Box>
 
