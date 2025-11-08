@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "nome": "Interstellar",
+    "image": "/images/interstellar.png",
+    "descricao": "Uma jornada através do espaço e do tempo para salvar a humanidade.",
+    "horariosPorData": {
+      "0": ["13h", "16h", "20h"],
+      "1": ["12h", "15h30", "19h"],
+      "2": ["14h", "18h30", "22h"]
+    }
+  },
+  {
+    "id": 2,
+    "nome": "Efeito Borboleta",
+    "image": "/images/efeito-borboleta.jpg",
+    "descricao": "Um homem descobre que pode mudar o passado, mas isso tem consequências.",
+    "horariosPorData": {
+      "0": ["12h", "15h", "18h", "21h"],
+      "1": ["13h", "17h", "20h30"],
+      "2": ["11h", "14h", "19h"]
+    }
+  },
+  {
+    "id": 3,
+    "nome": "Questão de Tempo",
+    "image": "/images/questao-tempo.jpg",
+    "descricao": "Um jovem com a habilidade de viajar no tempo tenta melhorar sua vida amorosa.",
+    "horariosPorData": {
+      "0": ["14h", "17h", "19h30"],
+      "1": ["15h", "18h30", "21h"],
+      "2": ["13h", "16h30", "20h"]
+    }
+  }
+]
