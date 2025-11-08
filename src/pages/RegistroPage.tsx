@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, Alert } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCinemaStore } from "../store/useCinemaStore";
@@ -9,6 +9,7 @@ export default function RegistroPage() {
   const [codigoEnviado, setCodigoEnviado] = useState(false);
   const navigate = useNavigate();
 
+  const isDevMode = true;
 
   const enviarCodigo = () => {
     setCodigoEnviado(true);
@@ -35,6 +36,22 @@ export default function RegistroPage() {
       <Typography>
         E-mail informado: <b>{usuario?.email}</b>
       </Typography>
+
+      {isDevMode && (
+        <Alert
+          severity="info"
+          sx={{
+            maxWidth: 400,
+            mx: "auto",
+            mt: 3,
+            mb: 3,
+            fontSize: "0.9rem",
+          }}
+        >
+          🔧 <strong>Modo desenvolvedor ativo</strong> — use o código <b>1234</b> para validação.
+        </Alert>
+      )}
+
 
       {!codigoEnviado ? (
         <Button sx={{ mt: 3 }} variant="contained" onClick={enviarCodigo}>
