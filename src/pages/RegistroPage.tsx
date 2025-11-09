@@ -37,7 +37,7 @@ export default function RegistroPage() {
         E-mail informado: <b>{usuario?.email}</b>
       </Typography>
 
-      {isDevMode && (
+      {isDevMode && codigoEnviado && (
         <Alert
           severity="info"
           sx={{
