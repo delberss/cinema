@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 export default function ConfirmacaoPage() {
   const {
@@ -71,6 +72,14 @@ export default function ConfirmacaoPage() {
   const [quantidadeTemp, setQuantidadeTemp] = useState(
     horarioSelecionado.quantidade?.toString() || "1"
   );
+
+  const ingressosMesmoFilme = ingressosComprados.filter(
+    (ing) => ing.filme === horarioSelecionado.filme
+  );
+
+  const [indiceIngresso, setIndiceIngresso] = useState(0);
+  const ingressoAtual = ingressosMesmoFilme[indiceIngresso];
+
   return (
     <Box textAlign="center" mt={2} mb={6}>
       <Typography variant="h5" fontWeight="bold" gutterBottom>
@@ -222,7 +231,7 @@ export default function ConfirmacaoPage() {
             )}
           </Box>
           <Box>
-            {ingressoExistente && (
+            {ingressosMesmoFilme.length > 0 && (
               <Box
                 mt={4}
                 display="flex"
@@ -231,21 +240,69 @@ export default function ConfirmacaoPage() {
                 gap={2}
               >
                 <Typography color="warning.main" fontWeight={600}>
-                  ⚠️ Você já possui ingresso para este filme:
+                  ⚠️ Você já possui{" "}
+                  {ingressosMesmoFilme.length > 1 ? "ingressos" : "ingresso"}{" "}
+                  para este filme:
                 </Typography>
 
-                <Card sx={{ width: "320px", textAlign: "left" }}>
+                <Card
+                  sx={{
+                    width: "320px",
+                    textAlign: "left",
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  {ingressosMesmoFilme.length > 1 && (
+                    <>
+                      <Button
+                        size="small"
+                        onClick={() =>
+                          setIndiceIngresso(
+                            (prev) => (prev + 1) % ingressosMesmoFilme.length
+                          )
+                        }
+                        sx={{
+                          position: "absolute",
+                          right: 4,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          minWidth: "auto",
+                          p: 0.5,
+                          backgroundColor: "rgba(255,255,255,0.8)",
+                          "&:hover": {
+                            backgroundColor: "rgba(255,255,255,1)",
+                          },
+                        }}
+                      >
+                        <ArrowForwardIosIcon fontSize="small" />
+                      </Button>
+                    </>
+                  )}
+
                   <CardContent>
-                    <Typography variant="h6">{ingressoExistente.filme}</Typography>
-                    <Typography>Data: {ingressoExistente.data}</Typography>
-                    <Typography>Horário: {ingressoExistente.hora}</Typography>
-                    <Typography>Quantidade: {ingressoExistente.quantidade}</Typography>
+                    <Typography variant="h6">{ingressoAtual.filme}</Typography>
+                    <Typography>Data: {ingressoAtual.data}</Typography>
+                    <Typography>Horário: {ingressoAtual.hora}</Typography>
                     <Typography>
-                      Valor total: R$ {ingressoExistente.valor.toFixed(2)}
+                      Quantidade: {ingressoAtual.quantidade}
+                    </Typography>
+                    <Typography>
+                      Valor total: R$ {ingressoAtual.valor.toFixed(2)}
                     </Typography>
                     <Typography color="text.secondary">
-                      Data da compra: {ingressoExistente.dataCompra}
+                      Data da compra: {ingressoAtual.dataCompra}
                     </Typography>
+
+                    {ingressosMesmoFilme.length > 1 && (
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ display: "block", textAlign: "center", mt: 1 }}
+                      >
+                        {indiceIngresso + 1} de {ingressosMesmoFilme.length}
+                      </Typography>
+                    )}
                   </CardContent>
                 </Card>
 
