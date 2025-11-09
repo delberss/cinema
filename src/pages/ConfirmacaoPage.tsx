@@ -8,20 +8,20 @@ import {
   TextField,
 } from "@mui/material";
 import { useCinemaStore } from "../store/useCinemaStore";
-import {  useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 export default function ConfirmacaoPage() {
   const {
+    isLoggedIn,
     horarioSelecionado,
     ingressosComprados,
     setHorarioSelecionado,
   } = useCinemaStore();
 
   const navigate = useNavigate();
-
   const dataSelecionada = horarioSelecionado?.data || "";
 
   const [erroQuantidade, setErroQuantidade] = useState<string | null>(null);
@@ -44,6 +44,11 @@ export default function ConfirmacaoPage() {
   const filmeAtual = infoFilmes.find(
     (f) => f.nome === horarioSelecionado?.filme
   );
+
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login");
+  }, [isLoggedIn, navigate]);
 
   const ingressoExistente = useMemo(() => {
     if (!horarioSelecionado) return null;
@@ -205,6 +210,16 @@ export default function ConfirmacaoPage() {
               />
 
             </Box>
+
+            {erroQuantidade && (
+              <Typography
+                color="error"
+                variant="body2"
+                sx={{ mt: 0.5, ml: 1 }}
+              >
+                {erroQuantidade}
+              </Typography>
+            )}
           </Box>
           <Box>
             {ingressoExistente && (
