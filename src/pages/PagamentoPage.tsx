@@ -1,6 +1,7 @@
 import {
   Box,
   Typography,
+  Button,
   Stack,
   Card,
   CardContent,
@@ -8,19 +9,34 @@ import {
   Grid,
 } from "@mui/material";
 import { useCinemaStore } from "../store/useCinemaStore";
+import { useState } from "react";
 import MovieIcon from "@mui/icons-material/Movie";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import EventIcon from "@mui/icons-material/Event";
 import PersonIcon from "@mui/icons-material/Person";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import QrCodeIcon from "@mui/icons-material/QrCode";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 export default function PagamentoPage() {
   const { horarioSelecionado, usuario } = useCinemaStore();
+  const [copied, setCopied] = useState(false);
 
   const valorUnitario = 29.9;
   const quantidade = horarioSelecionado?.quantidade || 1;
   const valorTotal = valorUnitario * quantidade;
+
+  const pixPayload = `00020126360014BR.GOV.BCB.PIX0114+559999999999520400005303986540${valorTotal.toFixed(
+    2
+  )}5802BR5920Cinema Cidade6009SAO PAULO62070503***6304ABCD`;
+
+  const handleCopyPix = () => {
+    navigator.clipboard.writeText(pixPayload);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+
   return (
     <Box textAlign="center" mt={2} mb={6}>
       <Typography variant="h5" gutterBottom fontWeight="bold">
@@ -30,8 +46,7 @@ export default function PagamentoPage() {
       <Grid
         container
         justifyContent="center"
-        alignItems="center"
-        margin="auto"
+        alignItems="flex-start"
         spacing={1}
         mt={2}
       >
@@ -39,8 +54,8 @@ export default function PagamentoPage() {
           container
           size={{ xs: 12, md: 5 }}
           sx={{
-            alignItems: "center",
-            justifyContent: { xs: "center", md: "center" },
+            alignItems: "flex-end",
+            justifyContent: { xs: "center", md: "flex-end" },
             pr: { xs: 0, md: 4 },
           }}
         >
@@ -95,6 +110,28 @@ export default function PagamentoPage() {
           </Card>
         </Grid>
 
+        <Grid container size={{ xs: 12, md: 5 }}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            textAlign="center"
+          >
+           
+                <Typography mb={2} color="text.secondary">
+                  Copie o código PIX abaixo e cole no seu aplicativo bancário:
+                </Typography>
+                <Button
+                  variant="contained"
+                  color={copied ? "success" : "primary"}
+                  startIcon={<ContentCopyIcon />}
+                  sx={{ mt: 2 }}
+                  onClick={handleCopyPix}
+                >
+                  {copied ? "Copiado!" : "Copiar código PIX"}
+                </Button>
+          </Box>
+        </Grid>
       </Grid>
      
     </Box>
