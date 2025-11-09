@@ -11,6 +11,7 @@ interface HorarioSelecionado {
 interface Usuario {
   cpf: string;
   email: string;
+  registrado?: boolean;
 }
 
 interface Ingresso {
@@ -36,7 +37,7 @@ interface CinemaState {
 
   ingressosComprados: Ingresso[];
   adicionarIngresso: (ingresso: Ingresso) => void;
-  removerIngresso: (id: string) => void; // 👈 nova função
+  removerIngresso: (id: string) => void;
 }
 
 export const useCinemaStore = create<CinemaState>()(
