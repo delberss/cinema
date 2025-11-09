@@ -82,7 +82,20 @@ export default function ConfirmacaoPage() {
 
   return (
     <Box textAlign="center" mt={2} mb={6}>
-      <Typography variant="h5" fontWeight="bold" gutterBottom>
+      <Typography
+        variant="h5"
+        fontWeight={700}
+        gutterBottom
+        sx={{
+          color: "primary.main",
+          background: "linear-gradient(90deg, #64b5f6 0%, #90caf9 50%, #bbdefb 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          letterSpacing: { xs: "0.4px", md: "0.8px" },
+          textShadow: "0px 1px 2px rgba(0,0,0,0.2)",
+          fontSize: { xs: "1.6rem", sm: "1.9rem", md: "2.2rem" },
+        }}
+      >
         🎬 Confirmação de Ingresso
       </Typography>
 
