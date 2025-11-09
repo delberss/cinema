@@ -263,10 +263,11 @@ export default function PagamentoPage() {
 
       <Stack
         direction={{ xs: "column", sm: "row" }}
-        spacing={2}
+        spacing={{ xs: 1.5, sm: 2 }}
         justifyContent="center"
         alignItems="center"
-        mt={4}
+        mt={{ xs: 1, sm: 6 }}
+        mb={{ xs: 6, sm: 4 }}
       >
         <Button variant="outlined" color="info" onClick={() => navigate(-1)}>
           Voltar
