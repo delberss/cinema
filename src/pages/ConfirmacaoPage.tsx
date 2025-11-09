@@ -6,6 +6,7 @@ import {
   CardContent,
   Stack,
   TextField,
+  styled,
 } from "@mui/material";
 import { useCinemaStore } from "../store/useCinemaStore";
 import { useEffect, useMemo, useState } from "react";
@@ -46,6 +47,13 @@ export default function ConfirmacaoPage() {
     (f) => f.nome === horarioSelecionado?.filme
   );
 
+  const StyledMovies = styled("img")({
+    height: "350px",
+    objectFit: "contain",
+    padding: "2px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+    width: "100%",
+  });
 
   useEffect(() => {
     if (!isLoggedIn) navigate("/login");
@@ -105,8 +113,8 @@ export default function ConfirmacaoPage() {
         justifyContent="center"
         alignItems={{ xs: "center", md: "flex-start" }}
         gap={4}
-        mt={4}
-        mb={3}
+        mt={2}
+        mb={{ xs: 1, sm: 3 }}
       >
         <Box
           display="flex"
@@ -115,20 +123,9 @@ export default function ConfirmacaoPage() {
           textAlign="center"
           gap={1.5}
         >
-
+          
           {filmeAtual && (
-            <Box
-              component="img"
-              src={filmeAtual.image}
-              alt={filmeAtual.nome}
-              sx={{
-                width: { xs: "280px", md: "320px" },
-                height: { xs: "400px", md: "440px" },
-                objectFit: "cover",
-                borderRadius: "12px",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-              }}
-            />
+            <StyledMovies src={filmeAtual.image} alt={filmeAtual.nome} />
           )}
         </Box>
 
@@ -331,10 +328,10 @@ export default function ConfirmacaoPage() {
 
       <Stack
         direction={{ xs: "column", sm: "row" }}
-        spacing={{ xs: 2.5, sm: 2 }}
+        spacing={{ xs: 1.5, sm: 2 }}
         justifyContent="center"
         alignItems="center"
-        mt={4}
+        mt={{ xs: 1, sm: 6 }}
         mb={{ xs: 6, sm: 4 }}
       >
         <Button
