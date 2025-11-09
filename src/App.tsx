@@ -78,11 +78,10 @@ function App() {
       setDataSelecionada(opcoesDatas[0]);
   }, [dataSelecionada, opcoesDatas]);
 
-  // 🔹 Estilos
   const StyledMovies = styled("img")({
     height: "350px",
-    objectFit: "cover",
-    borderRadius: "8px",
+    objectFit: "contain",
+    padding: "2px",
     boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
     width: "100%",
   });
