@@ -7,9 +7,12 @@ import {
   CardContent,
   Divider,
   Grid,
+  useMediaQuery,
 } from "@mui/material";
+import { QRCodeCanvas } from "qrcode.react";
 import { useCinemaStore } from "../store/useCinemaStore";
 import { useState } from "react";
+import { useTheme } from "@mui/material/styles";
 import MovieIcon from "@mui/icons-material/Movie";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import EventIcon from "@mui/icons-material/Event";
@@ -21,6 +24,9 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 export default function PagamentoPage() {
   const { horarioSelecionado, usuario } = useCinemaStore();
   const [copied, setCopied] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const valorUnitario = 29.9;
   const quantidade = horarioSelecionado?.quantidade || 1;
@@ -117,7 +123,24 @@ export default function PagamentoPage() {
             alignItems="center"
             textAlign="center"
           >
-           
+            {!isMobile ? (
+              <>
+                <Typography mb={2} color="text.secondary">
+                  Escaneie o QR Code abaixo para realizar o pagamento:
+                </Typography>
+                <QRCodeCanvas value={pixPayload} size={220} />
+                <Button
+                  variant="contained"
+                  color={copied ? "success" : "primary"}
+                  startIcon={<ContentCopyIcon />}
+                  sx={{ mt: 2 }}
+                  onClick={handleCopyPix}
+                >
+                  {copied ? "Copiado!" : "Copiar código PIX"}
+                </Button>
+              </>
+            ) : (
+              <>
                 <Typography mb={2} color="text.secondary">
                   Copie o código PIX abaixo e cole no seu aplicativo bancário:
                 </Typography>
@@ -130,10 +153,12 @@ export default function PagamentoPage() {
                 >
                   {copied ? "Copiado!" : "Copiar código PIX"}
                 </Button>
+              </>
+            )}
           </Box>
         </Grid>
       </Grid>
-     
+      
     </Box>
   );
 }
