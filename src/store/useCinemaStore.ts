@@ -53,10 +53,32 @@ export const useCinemaStore = create<CinemaState>()(
       setIsLoggedIn: (value) => set({ isLoggedIn: value }),
 
       ingressosComprados: [],
-      adicionarIngresso: (ingresso) =>
-        set((state) => ({
-          ingressosComprados: [...state.ingressosComprados, ingresso],
-        })),
+      adicionarIngresso: (novoIngresso) =>
+        set((state) => {
+          const ingressoExistenteIndex = state.ingressosComprados.findIndex(
+            (i) =>
+              i.filme === novoIngresso.filme &&
+              i.data === novoIngresso.data &&
+              i.hora === novoIngresso.hora
+          );
+
+          if (ingressoExistenteIndex !== -1) {
+            const ingressosAtualizados = [...state.ingressosComprados];
+            const ingressoAtual = ingressosAtualizados[ingressoExistenteIndex];
+
+            ingressosAtualizados[ingressoExistenteIndex] = {
+              ...ingressoAtual,
+              quantidade: ingressoAtual.quantidade + novoIngresso.quantidade,
+              valor: ingressoAtual.valor + novoIngresso.valor,
+            };
+
+            return { ingressosComprados: ingressosAtualizados };
+          }
+
+          return {
+            ingressosComprados: [...state.ingressosComprados, novoIngresso],
+          };
+        }),
 
       removerIngresso: (id) =>
         set((state) => ({
