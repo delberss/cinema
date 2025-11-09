@@ -123,9 +123,26 @@ export default function PagamentoPage() {
 
   return (
     <Box textAlign="center" mt={2} mb={6}>
-      <Typography variant="h5" gutterBottom fontWeight="bold">
-        <QrCodeIcon color="success" /> Pagamento via PIX
+      <Typography
+        variant="h5"
+        gutterBottom
+        fontWeight={700}
+        sx={{
+          background: "linear-gradient(90deg, #2e7d32 0%, #43a047 40%, #66bb6a 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          letterSpacing: { xs: "0.4px", md: "0.8px" },
+          textShadow: "0px 1px 2px rgba(0,0,0,0.15)",
+          fontSize: { xs: "1.6rem", sm: "1.9rem", md: "2.2rem" },
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 1,
+        }}
+      >
+        <QrCodeIcon color="success" sx={{ fontSize: "2rem" }} /> Pagamento via PIX
       </Typography>
+
 
       <Grid
         container
